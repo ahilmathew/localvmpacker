@@ -1,0 +1,62 @@
+{
+    "description": "Packer template for building ubuntu 22.04 server",
+    "variables": {
+        "iso_url": "file:///home/ahilmathew/repos/localvm/ubuntu-23.10-live-server-amd64.iso",
+        "iso_checksum": "sha256:d2fb80d9ce77511ed500bcc1f813e6f676d4a3577009dfebce24269ca23346a5"
+    },
+    "builders": [{
+        "type": "virtualbox-iso",
+        "guest_os_type": "Ubuntu_64",
+
+        "output_directory": "output",
+        "http_directory": "http",
+        "http_port_min": 8000,
+        "http_port_max": 9000,
+        "iso_urls": [
+            "{{ user `iso_url` }}",
+            "https://releases.ubuntu.com/23.10/ubuntu-23.10-live-server-amd64.iso"
+        ],
+        "iso_checksum": "{{ user `iso_checksum` }}",
+        "ssh_username": "ubuntu",
+        "ssh_password": "ubuntu",
+        "ssh_wait_timeout": "30m",
+        "ssh_handshake_attempts": 100,
+        "ssh_port": 22,
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--memory", "4096"],
+            ["modifyvm", "{{.Name}}", "--cpus", "3"],
+            ["modifyvm", "{{.Name}}", "--graphicscontroller", "vmsvga"],
+            ["modifyvm", "{{.Name}}", "--vrde", "off"]
+        ],
+        "vm_name": "ubuntu_22_04_java_vm",
+        "boot_wait": "6s",
+        "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+        "boot_command": [
+            "c<wait>",  
+            "<enter>",
+            "ubiquity/reboot=true <enter>",
+            "linux /casper/vmlinuz autoinstall ds=\"nocloud-net;s=http://{{.HTTPIP}}:{{.HTTPPort}}/\"  ---",
+            "<enter><wait>",
+            "initrd /casper/initrd",
+            "<enter><wait>",
+            "boot",
+            "<enter>"
+          ]
+    }],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+              "sudo apt-get update",
+              "sudo apt-get install -y ubuntu-desktop"
+            ]
+          },
+          {
+            "type": "shell",
+            "inline": [
+              "sudo apt-get install -y default-jdk",
+              "sudo apt-get install -y maven"
+            ]
+          }
+      ]
+}

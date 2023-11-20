@@ -1,0 +1,4 @@
+.*
+!.gitignore
+packer.log
+output
