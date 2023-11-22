@@ -12,8 +12,8 @@ autoinstall:
           dhcp4: true
   identity:
     hostname: ubuntu-vm
-    username: ahilmathew
-    password: "$6$rounds=4096$c3LcaBr8DbWrzbB5$o\/5bgSna9hCTiI\/.OJ51llRjaYuGkpD8ITYz2yz1KXjiwe9V147gzRRIIhLVCf9mMNpB7Pd0kyJUpykv14GpD\/"
+    username: ubuntu
+    password: "$6$rounds=4096$suKtNFKB8wk6S8OH$wVwDTTKKvbhgarmiCae8GhRNA6196xLfkhAyIXZ4.xYqCzwWLi0.vb4Whq28j6P4M3YuchWSYJIpY0sdQimD1."
   early-commands:
     # otherwise packer tries to connect and exceed max attempts:
     - systemctl stop ssh
@@ -23,18 +23,11 @@ autoinstall:
     authorized-keys: []
   late-commands:
     - sed -i -e 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g' /target/etc/ssh/sshd_config
-    - echo 'ahilmathew ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ahilmathew
-    - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/ahilmathew
+    - echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ubuntu
+    - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/ubuntu
   storage:
     layout:
       name: direct
-# ssh_pwauth: true
-# write_files:
-#   - path: /etc/sudoers.d/90-cloud-init-users
-#     content: |
-#       ahilmathew ALL=(ALL) NOPASSWD:ALL
-#     permissions: '0440'  
 runcmd:
-  - echo "Example command" > /root/example.txt
   - sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
   - systemctl restart ssh

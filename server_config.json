@@ -2,7 +2,8 @@
     "description": "Packer template for building ubuntu 22.04 server",
     "variables": {
         "iso_url": "file:///home/ahilmathew/repos/localvm/ubuntu-23.10-live-server-amd64.iso",
-        "iso_checksum": "sha256:d2fb80d9ce77511ed500bcc1f813e6f676d4a3577009dfebce24269ca23346a5"
+        "iso_checksum": "sha256:d2fb80d9ce77511ed500bcc1f813e6f676d4a3577009dfebce24269ca23346a5",
+        "password": ""
     },
     "builders": [{
         "type": "virtualbox-iso",
@@ -18,15 +19,13 @@
         ],
         "iso_checksum": "{{ user `iso_checksum` }}",
         "ssh_username": "ubuntu",
-        "ssh_password": "ubuntu",
+        "ssh_password": "{{ user `password` }}",
         "ssh_wait_timeout": "30m",
         "ssh_handshake_attempts": 100,
         "ssh_port": 22,
         "vboxmanage": [
             ["modifyvm", "{{.Name}}", "--memory", "4096"],
-            ["modifyvm", "{{.Name}}", "--cpus", "3"],
-            ["modifyvm", "{{.Name}}", "--graphicscontroller", "vmsvga"],
-            ["modifyvm", "{{.Name}}", "--vrde", "off"]
+            ["modifyvm", "{{.Name}}", "--cpus", "4"]
         ],
         "vm_name": "ubuntu_22_04_java_vm",
         "boot_wait": "6s",
@@ -47,14 +46,16 @@
         {
             "type": "shell",
             "inline": [
+              "echo Installing ubuntu desktop...",
               "sudo apt-get update",
-              "sudo apt-get install -y ubuntu-desktop"
+              "sudo apt-get install -y ubuntu-desktop-minimal"
             ]
           },
           {
             "type": "shell",
             "inline": [
               "sudo apt-get install -y default-jdk",
+              "sudo apt-get install -y git",
               "sudo apt-get install -y maven"
             ]
           }
