@@ -13,7 +13,7 @@ autoinstall:
   identity:
     hostname: ubuntu-vm
     username: ubuntu
-    password: "$6$rounds=4096$suKtNFKB8wk6S8OH$wVwDTTKKvbhgarmiCae8GhRNA6196xLfkhAyIXZ4.xYqCzwWLi0.vb4Whq28j6P4M3YuchWSYJIpY0sdQimD1."
+    password: "$6$rounds=4096$JH.vCu9F\/ouR2BPk$DgDPx7qgse6BMutzx9MSpuP8XrTLMjy0MuedJBntbahWdffKCI8GutQ6rQwzTehU137nMU7LERLFzHh5A.2890"
   early-commands:
     # otherwise packer tries to connect and exceed max attempts:
     - systemctl stop ssh

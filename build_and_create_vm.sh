@@ -10,7 +10,11 @@ read -sp "Password for the VM: " password
 
 hashedPass=$(echo "$password" | mkpasswd --method=SHA-512 --rounds=4096 --stdin)
 escapedhashPass=$(echo $hashedPass | sed 's/\//\\\//g')
+echo "\n"
 
+# echo $hashedPass
+# echo $escapedhashPass
+# # exit 1
 echo "Updating hashedPassword in user-data file.."
 
 # sed -i "s-password: \".*\"-password: \"$escapedhashPass\"-" ./http/user-data
@@ -31,7 +35,7 @@ awk -v pw="$escapedhashPass" \
 echo "Going to do a packer build. This might take a while.."
 
 # Step 1: Run Packer Build
-packer build -var "password=\"$password\"" "$PACKER_TEMPLATE"
+packer build -var "password=$password" "$PACKER_TEMPLATE"
 
 # Step 2: Check for Success
 if [ $? -eq 0 ]; then
