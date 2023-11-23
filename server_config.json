@@ -1,7 +1,7 @@
 {
     "description": "Packer template for building ubuntu 22.04 server",
     "variables": {
-        "iso_url": "file:///home/ahilmathew/repos/localvm/ubuntu-23.10-live-server-amd64.iso",
+        "iso_url": "file:///./ubuntu-23.10-live-server-amd64.iso",
         "iso_checksum": "sha256:d2fb80d9ce77511ed500bcc1f813e6f676d4a3577009dfebce24269ca23346a5",
         "password": ""
     },
